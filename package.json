@@ -3,11 +3,6 @@
   "version": "1.0.0",
   "description": "Full-stack furniture e-commerce platform",
   "private": true,
-  "workspaces": [
-    "frontend",
-    "backend",
-    "admin-panel"
-  ],
   "scripts": {
     "install:all": "npm run install:frontend && npm run install:backend && npm run install:admin",
     "install:frontend": "cd frontend && npm install",
