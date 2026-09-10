@@ -49,19 +49,40 @@ export default function FooterOne() {
                         </div>
 
                         <div className="lg:max-w-[522px] w-full sm:text-center -order-1 lg:order-none">
-                            <img className="sm:mx-auto w-[201px] " src={logoLight} alt="logo"/>
-                            <p className="mt-4 text-white-light max-w-[522px] sm:mx-auto">Furnixar is a modern furniture template for an eCommerce website designed to help you create an impressive online store for your furniture or home decor business. </p>
+                            <Link to="/" className="inline-block sm:mx-auto">
+                                <span className="text-2xl sm:text-3xl font-bold tracking-wider text-white uppercase">
+                                    Makkah <span className="text-primary font-normal">Furniture</span>
+                                </span>
+                            </Link>
+                            <p className="mt-4 text-white-light max-w-[522px] sm:mx-auto text-sm sm:text-base leading-relaxed">
+                                Makkah Furniture is Pakistan's trusted provider of executive office workstations, luxury dining sets, cafe seating, gaming zone ergonomics, and outdoor decor. Nationwide Cash on Delivery (COD) across Karachi, Lahore, Islamabad, and all major cities.
+                            </p>
+                            <div className="mt-4 flex items-center sm:justify-center gap-4 text-sm flex-wrap">
+                                <a href="tel:03311323017" className="flex items-center gap-2 text-white hover:text-primary transition-colors">
+                                    <span className="bg-primary/20 text-primary p-1.5 rounded-full">📞</span>
+                                    <span className="font-semibold text-base">0331-1323017</span>
+                                </a>
+                                <span className="text-white/40">|</span>
+                                <a 
+                                    href="https://wa.me/923311323017?text=Hello%20Makkah%20Furniture" 
+                                    target="_blank" 
+                                    rel="noopener noreferrer" 
+                                    className="flex items-center gap-2 text-[#25D366] hover:underline font-medium text-base"
+                                >
+                                    <span>💬</span> WhatsApp Orders
+                                </a>
+                            </div>
                             <div className="flex items-center sm:justify-center gap-4 mt-6">
-                                <Link to="#" className="w-10 h-10 rounded-full border border-white border-opacity-50 flex items-center justify-center group hover:border-primary duration-300">
+                                <Link to="#" aria-label="Facebook" className="w-10 h-10 rounded-full border border-white border-opacity-50 flex items-center justify-center group hover:border-primary duration-300">
                                     <FaFacebookF className=" text-white text-opacity-70 group-hover:text-primary duration-300 group-hover:text-opacity-100"/>
                                 </Link>
-                                <Link to="#" className="w-10 h-10 rounded-full border border-white border-opacity-50 flex items-center justify-center group hover:border-primary duration-300">
+                                <Link to="#" aria-label="Twitter" className="w-10 h-10 rounded-full border border-white border-opacity-50 flex items-center justify-center group hover:border-primary duration-300">
                                     <FaTwitter className=" text-white text-opacity-70 group-hover:text-primary duration-300 group-hover:text-opacity-100"/>
                                 </Link>
-                                <Link to="#" className="w-10 h-10 rounded-full border border-white border-opacity-50 flex items-center justify-center group hover:border-primary duration-300">
+                                <Link to="#" aria-label="Instagram" className="w-10 h-10 rounded-full border border-white border-opacity-50 flex items-center justify-center group hover:border-primary duration-300">
                                     <FaInstagram className=" text-white text-opacity-70 group-hover:text-primary duration-300 group-hover:text-opacity-100"/>
                                 </Link>
-                                <Link to="#" className="w-10 h-10 rounded-full border border-white border-opacity-50 flex items-center justify-center group hover:border-primary duration-300">
+                                <Link to="#" aria-label="LinkedIn" className="w-10 h-10 rounded-full border border-white border-opacity-50 flex items-center justify-center group hover:border-primary duration-300">
                                     <FaLinkedin className=" text-white text-opacity-70 group-hover:text-primary duration-300 group-hover:text-opacity-100"/>
                                 </Link>
                             </div>
@@ -92,7 +113,9 @@ export default function FooterOne() {
                     </div>
 
                     <div className="max-w-[1722px] mx-auto border-t border-white border-opacity-10 py-5 md:py-7 text-center">
-                        <p className="text-white-light inline-flex align-middle">© {new Date().getFullYear()} Furnixar Develop with <FaHeart className="fa-solid fa-heart mx-1 text-red-500"></FaHeart>  By <Link to="https://shreethemes.in/" target="_blank" className='ms-1'>Shreethemes</Link></p>
+                        <p className="text-white-light inline-flex align-middle text-sm sm:text-base">
+                            © {new Date().getFullYear()} Makkah Furniture Pakistan. All Rights Reserved. Nationwide Cash on Delivery (COD).
+                        </p>
                     </div>
                 </div>
             </div>

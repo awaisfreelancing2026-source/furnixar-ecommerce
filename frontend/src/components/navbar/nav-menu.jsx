@@ -1,19 +1,52 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { useWishlist } from '../../context/WishlistContext'
+import { useCart } from '../../context/CartContext'
+import { productList } from '../../data/data'
 
-import { cartList, wishListData } from '../../data/nav-data';
-
-import { LuSearch,LuX} from "react-icons/lu";
+import { LuSearch, LuX } from "react-icons/lu";
 import { GoHeart } from "react-icons/go";
-import {RiShoppingBag4Line} from 'react-icons/ri'
+import { RiShoppingBag4Line } from 'react-icons/ri'
 import Switcher from '../switcher';
 import IncreDre from '../incre-dre';
-import { blogTag } from '../../data/blog';
 
 export default function NavMenu({toggle, setToggle}) {  
     const [wishList, setWishList] = useState(false)
     const [cart, setCart] = useState(false)
     const [open, setOpen] = useState(false)
+    const [searchKeyword, setSearchKeyword] = useState('')
+
+    const navigate = useNavigate()
+
+    const { wishlist, wishlistCount, removeFromWishlist } = useWishlist()
+    const { cartItems, cartCount, cartSubtotal, removeFromCart } = useCart()
+
+    const matchingProducts = searchKeyword.trim().length > 1
+        ? productList.filter(item => 
+            (item.name || '').toLowerCase().includes(searchKeyword.toLowerCase()) ||
+            (item.category || '').toLowerCase().includes(searchKeyword.toLowerCase()) ||
+            (item.subCategory || '').toLowerCase().includes(searchKeyword.toLowerCase())
+          ).slice(0, 6)
+        : []
+
+    const handleSearchSubmit = (e) => {
+        e.preventDefault()
+        if (searchKeyword.trim()) {
+            setOpen(false)
+            navigate(`/shop?search=${encodeURIComponent(searchKeyword.trim())}`)
+        }
+    }
+
+    const handleTagClick = (tag) => {
+        setOpen(false)
+        navigate(`/shop?search=${encodeURIComponent(tag)}`)
+    }
+
+    const handleProductClick = (id) => {
+        setOpen(false)
+        setSearchKeyword('')
+        navigate(`/product-details/${id}`)
+    }
 
   return (
     <div className="flex items-center gap-4 sm:gap-6">
@@ -23,81 +56,89 @@ export default function NavMenu({toggle, setToggle}) {
         </button>
 
         <button className="relative hdr_wishList_btn" onClick={()=>setWishList(!wishList)}>
-            <span className="absolute w-[22px] h-[22px] bg-secondary -top-[10px] -right-[11px] rounded-full flex items-center justify-center text-xs leading-none text-white">14</span>
+            {wishlistCount > 0 && (
+                <span className="absolute w-[22px] h-[22px] bg-secondary -top-[10px] -right-[11px] rounded-full flex items-center justify-center text-xs leading-none text-white font-medium animate-pulse">
+                    {wishlistCount}
+                </span>
+            )}
             <GoHeart className="text-title dark:text-white size-6"/>
         </button>
 
-        <div className={`wishlist_popup w-80 md:w-96 absolute z-50 top-full right-0 sm:right-20 xl:right-11 bg-white dark:bg-title py-5 md:py-[30px] pl-5 md:pl-[30px] pr-[10px] md:pr-[15px] border border-primary ${wishList ? 'block' : 'hidden'}`}>
-            <h4 className="font-medium leading-none dark:text-white mb-4 text-xl md:text-2xl">Wishlist</h4>
+        <div className={`wishlist_popup w-80 md:w-96 absolute z-50 top-full right-0 sm:right-20 xl:right-11 bg-white dark:bg-title py-5 md:py-[30px] pl-5 md:pl-[30px] pr-[10px] md:pr-[15px] border border-primary shadow-xl ${wishList ? 'block' : 'hidden'}`}>
+            <h4 className="font-medium leading-none dark:text-white mb-4 text-xl md:text-2xl">Wishlist ({wishlistCount})</h4>
             <div>
-                <div className="pr-4 md:pr-5 wishlist-item">
-                    {wishListData.map((item,index)=>{
-                        return(
-                            <Link to="/product-details" className="flex items-center gap-[15px] relative pb-[15px] mb-[15px] border-b border-bdr-clr dark:border-bdr-clr-drk" key={index}>
-                                <img className="w-[70px] md:w-auto" src={item.image} alt="wishlist"/>
-                                <div>
-                                    <div className="flex items-center gap-2">
-                                        <span className="text-[14px] md:text-[15px] leading-none block">{item.name}</span>
-                                        <span className="w-[6px] h-[6px] rounded-full bg-primary"></span>
-                                        <span className="text-[14px] md:text-[15px] leading-none block">{item.price}</span>
-                                    </div>
-                                    <h6 className="text-base md:text-lg font-semibold leading-none mt-3">{item.desc}</h6>
+                <div className="pr-4 md:pr-5 wishlist-item max-h-[320px] overflow-y-auto">
+                    {wishlist.length === 0 ? (
+                        <p className="text-sm text-gray-500 py-4 text-center">Your wishlist is currently empty.</p>
+                    ) : (
+                        wishlist.map((item, index) => (
+                            <div className="flex items-center gap-[15px] relative pb-[15px] mb-[15px] border-b border-bdr-clr dark:border-bdr-clr-drk" key={index}>
+                                <img className="w-[60px] h-[60px] object-cover rounded" src={item.image} alt="wishlist"/>
+                                <div className="flex-1 pr-6">
+                                    <span className="text-[14px] font-medium leading-tight block line-clamp-1">{item.name}</span>
+                                    <span className="text-sm font-semibold text-primary block mt-1">{item.price}</span>
                                 </div>
-                                <div className="wishList_item_close absolute top-0 right-0 w-6 h-6 flex items-center justify-center bg-title dark:bg-white bg-opacity-10 dark:bg-opacity-10 group duration-300 hover:bg-primary dark:hover:bg-primary">
-                                    <LuX className="text-title dark:text-white duration-300 group-hover:text-white"/>
-                                </div>
-                            </Link>
-                        )
-                    })}
+                                <button 
+                                    onClick={() => removeFromWishlist(item.id)}
+                                    className="wishList_item_close absolute top-0 right-0 w-6 h-6 flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-full hover:bg-red-500 hover:text-white transition-colors"
+                                >
+                                    <LuX className="size-3"/>
+                                </button>
+                            </div>
+                        ))
+                    )}
                 </div>
-                <div className="mt-6 md:mt-10">
-                    <Link to="/wishlist" className="btn btn-outline btn-sm w-full">
-                        <span>View All Wishlist</span>
+                <div className="mt-4">
+                    <Link to="/wishlist" className="btn btn-outline btn-sm w-full text-center block">
+                        <span>View Full Wishlist</span>
                     </Link>
                 </div>
             </div>
         </div>
 
         <button className="relative hdr_cart_btn" onClick={()=> setCart(!cart)}>
-            <span className="absolute w-[22px] h-[22px] bg-secondary -top-[10px] -right-[11px] rounded-full flex items-center justify-center text-xs leading-none text-white">22</span>
+            {cartCount > 0 && (
+                <span className="absolute w-[22px] h-[22px] bg-secondary -top-[10px] -right-[11px] rounded-full flex items-center justify-center text-xs leading-none text-white font-medium">
+                    {cartCount}
+                </span>
+            )}
             <RiShoppingBag4Line className="text-title dark:text-white size-6"/>
         </button>
 
-        <div className={`hdr_cart_popup w-80 md:w-96 absolute z-50 top-full right-0 sm:right-10 xl:right-0 bg-white dark:bg-title p-5 md:p-[30px] border border-primary ${cart ? '' : 'hidden'}`}>
-            <h4 className="font-medium leading-none mb-4 text-xl md:text-2xl">Cart List</h4>
+        <div className={`hdr_cart_popup w-80 md:w-96 absolute z-50 top-full right-0 sm:right-10 xl:right-0 bg-white dark:bg-title p-5 md:p-[30px] border border-primary shadow-xl ${cart ? '' : 'hidden'}`}>
+            <h4 className="font-medium leading-none mb-4 text-xl md:text-2xl">Your Cart ({cartCount})</h4>
             <div>
-                <div className="hdr-cart-item">
-                    {cartList.map((item,index)=>{
-                        return(
-                            <div className="flex gap-[15px] relative pb-[15px] mb-[15px] border-b border-bdr-clr dark:border-bdr-clr-drk group" key={index}>
-                                <Link to="/product-details" className="block">
-                                    <img className="w-[70px] md:w-auto h-full" src={item.image} alt="cart"/>
-                                </Link>
-                                <div>
-                                    <div className="flex items-center gap-2">
-                                        <span className="text-[14px] md:text-[15px] leading-none block">{item.name}</span>
-                                        <span className="w-[6px] h-[6px] rounded-full bg-primary"></span>
-                                        <span className="text-[14px] md:text-[15px] leading-none block">{item.value}</span>
-                                    </div>
-                                    <h6 className="text-base md:text-lg font-semibold !leading-none mt-[10px] mb-4">
-                                        <Link to="/product-details">{item.desc}</Link>
-                                    </h6>
-                                   <IncreDre/>
+                <div className="hdr-cart-item max-h-[300px] overflow-y-auto">
+                    {cartItems.length === 0 ? (
+                        <p className="text-sm text-gray-500 py-4 text-center">Your shopping cart is empty.</p>
+                    ) : (
+                        cartItems.map((item, index) => (
+                            <div className="flex gap-[15px] relative pb-[15px] mb-[15px] border-b border-bdr-clr dark:border-bdr-clr-drk" key={index}>
+                                <img className="w-[60px] h-[60px] object-cover rounded" src={item.image} alt="cart"/>
+                                <div className="flex-1 pr-6">
+                                    <span className="text-[14px] font-medium leading-tight block line-clamp-1">{item.name}</span>
+                                    <span className="text-sm text-gray-500 block mt-1">Qty: {item.quantity}</span>
+                                    <span className="text-sm font-semibold text-primary block">{item.price}</span>
                                 </div>
-                                <div className="wishList_item_close absolute top-0 right-0 w-6 h-6 flex items-center justify-center bg-title dark:bg-white bg-opacity-10 dark:bg-opacity-10 group hover:bg-primary dark:hover:bg-primary opacity-0 group-hover:opacity-100 text-title dark:text-white duration-300 hover:text-white">
-                                    <LuX className="text-title dark:text-white duration-300 group-hover:text-white"/>
-                                </div>
+                                <button 
+                                    onClick={() => removeFromCart(item.id)}
+                                    className="absolute top-0 right-0 w-6 h-6 flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-full hover:bg-red-500 hover:text-white transition-colors"
+                                >
+                                    <LuX className="size-3"/>
+                                </button>
                             </div>
-                        )
-                    })}
+                        ))
+                    )}
                 </div>
-                <div className="pt-5 md:pt-[30px] mt-5 md:mt-[30px] border-t border-bdr-clr dark:border-bdr-clr-drk">
-                    <h4 className="mb-5 md:mb-[30px] font-medium !leading-none text-lg md:text-xl text-right">Subtotal : $870</h4>
-                    <div className="grid grid-cols-2 gap-4">
-                        <Link to="/cart" className="btn btn-outline btn-sm" data-text="View Cart">
+                <div className="pt-4 mt-3 border-t border-bdr-clr dark:border-bdr-clr-drk">
+                    <h4 className="mb-4 font-semibold text-lg text-right">
+                        Subtotal: <span className="text-primary">Rs. {cartSubtotal.toLocaleString()}</span>
+                    </h4>
+                    <div className="grid grid-cols-2 gap-3">
+                        <Link to="/cart" className="btn btn-outline btn-sm text-center block" data-text="View Cart">
                             <span>View Cart</span>
                         </Link>
-                        <Link to="/checkout" className="btn btn-theme-solid btn-sm" data-text="Checkout">
+                        <Link to="/checkout" className="btn btn-theme-solid btn-sm text-center block" data-text="Checkout">
                             <span>Checkout</span>
                         </Link>
                     </div>
@@ -121,21 +162,58 @@ export default function NavMenu({toggle, setToggle}) {
                         <LuX/>
                     </button>
 
-                    <div className="bg-white dark:bg-title py-8 sm:py-10 md:py-[60px] px-5 sm:px-8">
-                        <div className="relative">
-                            <input className="outline-none border-b border-bdr-clr dark:border-bdr-clr-drk pb-4 md:pb-[22px] text-title w-full pr-7 md:pr-10 leading-none font-lg placeholder:text-title bg-transparent dark:bg-transparent dark:text-white dark:placeholder:text-white" type="text" placeholder="Type your keyword"/>
-                            <button className="absolute right-0 top-0">
-                                <svg className="fill-current text-title dark:text-white w-5 md:w-[30px]" viewBox="0 0 30 31" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M29.5439 28.2361L22.1484 20.5625C24.0499 18.3074 25.0917 15.4701 25.0917 12.5162C25.0917 5.61489 19.4635 0 12.5459 0C5.62818 0 0 5.61489 0 12.5162C0 19.4176 5.62818 25.0325 12.5459 25.0325C15.1429 25.0325 17.6177 24.251 19.7335 22.7676L27.1852 30.4994C27.4967 30.8221 27.9156 31 28.3646 31C28.7895 31 29.1926 30.8384 29.4986 30.5445C30.1488 29.9203 30.1695 28.8853 29.5439 28.2361ZM12.5459 3.26511C17.6591 3.26511 21.8189 7.41506 21.8189 12.5162C21.8189 17.6174 17.6591 21.7674 12.5459 21.7674C7.43261 21.7674 3.27283 17.6174 3.27283 12.5162C3.27283 7.41506 7.43261 3.26511 12.5459 3.26511Z"/>
-                                </svg>
+                    <div className="bg-white dark:bg-title py-8 sm:py-10 md:py-[50px] px-5 sm:px-8 rounded-xl shadow-2xl">
+                        <form onSubmit={handleSearchSubmit} className="relative">
+                            <input 
+                                className="outline-none border-b-2 border-primary pb-3 md:pb-4 text-title w-full pr-12 text-lg sm:text-2xl placeholder:text-gray-400 bg-transparent dark:text-white font-medium" 
+                                type="text" 
+                                value={searchKeyword}
+                                onChange={(e) => setSearchKeyword(e.target.value)}
+                                placeholder="Search executive desks, office chairs, dining sets..."
+                            />
+                            <button type="submit" className="absolute right-0 top-1 p-2 text-primary hover:scale-110 transition-transform" aria-label="Submit search">
+                                <LuSearch className="size-6" />
                             </button>
-                        </div>
-                        <div className="mt-10 md:mt-12">
-                            <h4 className="font-medium leading-none">Popular Tags</h4>
-                            <div className="flex flex-wrap gap-[10px] md:gap-[15px] mt-5 md:mt-6">
-                                {blogTag.map((item,index)=>{
-                                    return(
-                                        <Link className="btn btn-theme-outline btn-xs" to="#" data-text={item}key={index}><span>{item}</span></Link>
+                        </form>
+
+                        {/* Live Search Results Dropdown */}
+                        {matchingProducts.length > 0 && (
+                            <div className="mt-4 bg-gray-50 dark:bg-dark-secondary rounded-lg p-3 max-h-[280px] overflow-y-auto divide-y divide-gray-200 dark:divide-gray-700">
+                                <div className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2 px-2">
+                                    Instant Results ({matchingProducts.length})
+                                </div>
+                                {matchingProducts.map((p, idx) => (
+                                    <div 
+                                        key={idx}
+                                        onClick={() => handleProductClick(p.id)}
+                                        className="flex items-center justify-between p-2 hover:bg-white dark:hover:bg-gray-800 rounded cursor-pointer transition-colors"
+                                    >
+                                        <div className="flex items-center gap-3">
+                                            <img src={p.image} alt={p.name} className="w-12 h-12 object-cover rounded"/>
+                                            <div>
+                                                <h5 className="text-sm font-semibold text-title dark:text-white line-clamp-1">{p.name}</h5>
+                                                <span className="text-xs text-gray-500 capitalize">{p.category} • {p.subCategory || 'Furniture'}</span>
+                                            </div>
+                                        </div>
+                                        <span className="text-sm font-bold text-primary">{p.price}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+
+                        <div className="mt-6 md:mt-8">
+                            <h4 className="font-medium text-sm text-gray-500 dark:text-gray-400 leading-none">Popular Searches:</h4>
+                            <div className="flex flex-wrap gap-2 mt-3">
+                                {['Executive Desks', 'Office Chairs', 'Workstations', 'Cafe Tables', 'Gaming Chairs', 'Dining Sets', 'Outdoor Furniture'].map((tag, index) => {
+                                    return (
+                                        <button 
+                                            type="button"
+                                            onClick={() => handleTagClick(tag)}
+                                            className="px-3 py-1.5 rounded-full text-xs bg-gray-100 dark:bg-gray-800 text-title dark:text-white hover:bg-primary hover:text-white transition-colors" 
+                                            key={index}
+                                        >
+                                            {tag}
+                                        </button>
                                     )
                                 })}
                             </div>

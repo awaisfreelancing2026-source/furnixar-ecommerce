@@ -107,7 +107,7 @@ export const footerLink2 = [
 export const footerLink3 = [
     {
         name:'Shop',
-        link:'/shop-v1'
+        link:'/shop'
     },
     {
         name:'Product Single',

@@ -1,15 +1,21 @@
 import { GoStarFill } from 'react-icons/go'
 import { LuEye, LuHeart } from 'react-icons/lu'
+import { FaHeart } from 'react-icons/fa'
 import { RiShoppingBag2Line } from 'react-icons/ri'
 import { Link } from 'react-router-dom'
-
+import { useWishlist } from '../../context/WishlistContext'
+import { useCart } from '../../context/CartContext'
 
 export default function LayoutOne({ item }) {
+  const { toggleWishlist, isInWishlist } = useWishlist();
+  const { addToCart } = useCart();
+  const inWishlist = isInWishlist(item.id);
+
   return (
         <div className="group">
-            <div className="relative overflow-hidden">
+            <div className="relative overflow-hidden rounded-lg">
                 <Link to={`/product-details/${item.id}`}>
-                    <img className="w-full transform group-hover:scale-110 duration-300" src={item.image} alt="shop"/>
+                    <img className="w-full transform group-hover:scale-110 duration-300" src={item.image} alt={item.name || "shop"}/>
                 </Link>
                 {item.tag === 'Hot Sale' &&
                     <div className="absolute z-10 top-7 left-7 pt-[10px] pb-2 px-3 bg-[#1CB28E] rounded-[30px] font-primary text-[14px] text-white font-semibold leading-none">
@@ -26,18 +32,22 @@ export default function LayoutOne({ item }) {
                         10% OFF
                     </div>
                 }
-                <div className="absolute z-10 top-[25%] right-3  opacity-0 duration-300 transition-all group-hover:opacity-100 flex flex-col items-end gap-3">
-                    <Link to="#" className="bg-white dark:bg-title dark:text-white bg-opacity-80 flex items-center justify-center gap-2 px-4 py-[10px] text-base leading-none text-title rounded-[40px] h-14 overflow-hidden new-product-icon">
-                        <LuHeart className="dark:text-white h-[22px] w-[20px]"/>                                                                      
-                        <span className="mt-1">Add to wishlist</span>
-                    </Link>
-                    <Link to="#" className="bg-white dark:bg-title dark:text-white bg-opacity-80 flex items-center justify-center gap-2 px-4 py-[10px] text-base leading-none text-title rounded-[40px] h-14 overflow-hidden new-product-icon">
-                        <RiShoppingBag2Line className="dark:text-white h-[22px] w-[20px]"/>  
-                        <span className="mt-1">Add to Cart</span>
-                    </Link>
-                    <button className="bg-white dark:bg-title dark:text-white bg-opacity-80 flex items-center justify-center gap-2 px-4 py-[10px] text-base leading-none text-title rounded-[40px] h-14 overflow-hidden new-product-icon quick-view">
-                        <LuEye className="dark:text-white h-[22px] w-[20px]"/>                                      
-                        <span className="mt-1">Quick View</span>
+                <div className="absolute z-10 top-[25%] right-3 opacity-0 duration-300 transition-all group-hover:opacity-100 flex flex-col items-end gap-3">
+                    <button 
+                        onClick={() => toggleWishlist(item)}
+                        className={`bg-white dark:bg-title flex items-center justify-center gap-2 px-4 py-[10px] text-base leading-none rounded-[40px] h-14 overflow-hidden new-product-icon shadow-md hover:bg-primary hover:text-white transition-colors ${inWishlist ? 'text-red-500' : 'text-title dark:text-white'}`}
+                        title={inWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
+                    >
+                        {inWishlist ? <FaHeart className="text-red-500 h-[20px] w-[20px]"/> : <LuHeart className="h-[22px] w-[20px]"/>}                                                                      
+                        <span className="mt-1 text-xs font-medium">{inWishlist ? "Saved" : "Wishlist"}</span>
+                    </button>
+                    <button 
+                        onClick={() => addToCart(item)}
+                        className="bg-white dark:bg-title dark:text-white text-title flex items-center justify-center gap-2 px-4 py-[10px] text-base leading-none rounded-[40px] h-14 overflow-hidden new-product-icon shadow-md hover:bg-primary hover:text-white transition-colors"
+                        title="Add to Cart"
+                    >
+                        <RiShoppingBag2Line className="h-[22px] w-[20px]"/>  
+                        <span className="mt-1 text-xs font-medium">Add to Cart</span>
                     </button>
                 </div>
             </div>

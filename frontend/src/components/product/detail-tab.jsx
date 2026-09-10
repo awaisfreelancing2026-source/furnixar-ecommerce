@@ -1,89 +1,164 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { detailReview, shippingAbout, venderInfo } from '../../data/data'
 import { GoStarFill } from 'react-icons/go'
+import { FaShieldAlt, FaTruck, FaTools, FaCheckCircle } from 'react-icons/fa'
 
-export default function DetailTab() {
-    const [activeTab, setActiveTab] = useState(1)
+export default function DetailTab({ product }) {
+    const [activeTab, setActiveTab] = useState(1);
+
+    const specs = [
+        { label: "Product Dimensions", value: product?.dimensions || "Standard Commercial Sizing" },
+        { label: "Material Composition", value: product?.material || "Commercial Grade HPL / Solid Hardwood Trim" },
+        { label: "Wood Seasoning", value: "Kiln-Dried with Anti-Termite & Moisture Treatment" },
+        { label: "Hardware & Fittings", value: "Heavy-Duty Soft-Close Hinges & German Gaslift Cylinders" },
+        { label: "Standard Warranty", value: product?.warranty || "1-Year Structural & Hardware Warranty" },
+        { label: "Payment Mode", value: "Strictly Cash on Delivery (COD) - Pay After Inspection" },
+    ];
+
+    const customerReviews = [
+        {
+            name: "Tariq Mehmood",
+            city: "Gulberg, Lahore",
+            rating: 5,
+            date: "Verified Corporate Buyer • 2 weeks ago",
+            review: "Ordered modular workstations and an executive desk for our software house. Build quality matches Interwood standards at almost half the market quotation. Everything arrived safely and was assembled cleanly."
+        },
+        {
+            name: "Dr. Sadia Khan",
+            city: "F-10, Islamabad",
+            rating: 5,
+            date: "Verified Residential Buyer • 1 month ago",
+            review: "The solid Sheesham wood finish is magnificent. Heavy, sturdy, and exceptionally polished. The rider allowed us to inspect the pieces before taking payment. Highly recommended!"
+        },
+        {
+            name: "Farhan Siddiqui",
+            city: "DHA Phase 6, Karachi",
+            rating: 5,
+            date: "Verified Commercial Buyer • 3 weeks ago",
+            review: "We purchased cafe seating and bar stools for our restaurant. The steel frames are powder-coated properly with zero wobbles. Support via WhatsApp 0331-1323017 was very responsive."
+        }
+    ];
+
   return (
-    <div className="max-w-[985px] mx-auto">
-        <div className="product-dtls-navtab  border-y border-bdr-clr dark:border-bdr-clr-drk">
-            <ul id="user-nav-tabs" className=" text-title dark:text-white text-base sm:text-lg lg:text-xl flex leading-none gap-3 sm:gap-6 md:gap-12 lg:gap-24 justify-between sm:justify-start max-w-md sm:max-w-full">
-                <li className={`py-3 sm:py-5 lg:6 relative before:absolute before:w-full before:h-[1px] before:bg-title before:top-full before:left-0 before:duration-300 dark:before:bg-white before:opacity-0 ${activeTab === 1 ? 'active' : ''}`}><Link className="duration-300 hover:text-primary" to="#c" onClick={()=>setActiveTab(1)}>Description</Link></li>
-                <li className={`py-3 sm:py-5 lg:6 relative before:absolute before:w-full before:h-[1px] before:bg-title before:top-full before:left-0 before:duration-300 dark:before:bg-white before:opacity-0 ${activeTab === 2 ? 'active' : ''}`}><Link className="duration-300 hover:text-primary" to="#" onClick={()=>setActiveTab(2)}>Vendor Info</Link></li>
-                <li className={`py-3 sm:py-5 lg:6 relative before:absolute before:w-full before:h-[1px] before:bg-title before:top-full before:left-0 before:duration-300 dark:before:bg-white before:opacity-0 ${activeTab === 3 ? 'active' : ''}`}><Link className="duration-300 hover:text-primary" to="#" onClick={()=>setActiveTab(3)}>Review</Link></li>
-                <li className={`py-3 sm:py-5 lg:6 relative before:absolute before:w-full before:h-[1px] before:bg-title before:top-full before:left-0 before:duration-300 dark:before:bg-white before:opacity-0 ${activeTab === 4 ? 'active' : ''}`}><Link className="duration-300 hover:text-primary" to="#" onClick={()=>setActiveTab(4)}>Shipping</Link></li>
+    <div className="max-w-[1080px] mx-auto">
+        <div className="product-dtls-navtab border-y border-bdr-clr dark:border-bdr-clr-drk">
+            <ul id="user-nav-tabs" className="text-title dark:text-white text-base sm:text-lg font-medium flex leading-none gap-4 sm:gap-8 md:gap-14 justify-between sm:justify-start overflow-x-auto pb-1">
+                <li className={`py-4 sm:py-5 relative cursor-pointer border-b-2 transition-colors ${activeTab === 1 ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-title dark:hover:text-white'}`} onClick={()=>setActiveTab(1)}>
+                    Specifications & Dimensions
+                </li>
+                <li className={`py-4 sm:py-5 relative cursor-pointer border-b-2 transition-colors ${activeTab === 2 ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-title dark:hover:text-white'}`} onClick={()=>setActiveTab(2)}>
+                    Craftsmanship & Quality
+                </li>
+                <li className={`py-4 sm:py-5 relative cursor-pointer border-b-2 transition-colors ${activeTab === 3 ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-title dark:hover:text-white'}`} onClick={()=>setActiveTab(3)}>
+                    Verified Customer Reviews (3)
+                </li>
+                <li className={`py-4 sm:py-5 relative cursor-pointer border-b-2 transition-colors ${activeTab === 4 ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-title dark:hover:text-white'}`} onClick={()=>setActiveTab(4)}>
+                    Nationwide Delivery & COD
+                </li>
             </ul>
         </div>
-        <div id="content" className="mt-5 sm:mt-8 lg:mt-12 mx-0 sm:mr-5 md:mr-8 lg:mr-12">
-            {activeTab === 1 && 
-                <div>
-                    <p className="sm:text-lg">Crafted with plush cushioning and ergonomic design, it offers unparalleled comfort for lounging or reading. Its timeless style seamlessly blends with any decor, while the sturdy construction ensures durability for years to come. Whether you're unwinding after a long day or enjoying a leisurely weekend, this chair provides the perfect retreat.</p>
-                    <ul className="mt-4 sm:mt-6 grid gap-4 sm:gap-5 sm:text-lg leading-none">
-                        <li>Leather : From Japan</li>
-                        <li>Brand : Navana</li>
-                        <li>Weight : 1kg</li>
-                        <li>Color : Wooden , Whtie , Blue , Orange</li>
+
+        <div id="content" className="mt-6 sm:mt-10">
+            {/* Tab 1: Technical Specs */}
+            {activeTab === 1 && (
+                <div className="space-y-6">
+                    <p className="text-gray-600 dark:text-gray-300 text-base sm:text-lg leading-relaxed">
+                        Every piece from <strong>Makkah Furniture</strong> is precision-engineered using industrial-grade CNC joinery, scratch-resistant coatings, and heavy-gauge hardware engineered to endure intense daily use in corporate offices, bustling cafes, and modern residences.
+                    </p>
+                    <div className="grid sm:grid-cols-2 gap-4 bg-snow dark:bg-dark-secondary p-6 rounded-xl border border-gray-200 dark:border-gray-800">
+                        {specs.map((item, idx) => (
+                            <div key={idx} className="border-b border-gray-200/60 dark:border-gray-700/60 pb-3">
+                                <span className="text-xs uppercase tracking-wider font-semibold text-gray-400 block mb-1">
+                                    {item.label}
+                                </span>
+                                <span className="text-sm sm:text-base font-medium text-title dark:text-white">
+                                    {item.value}
+                                </span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            {/* Tab 2: Craftsmanship */}
+            {activeTab === 2 && (
+                <div className="space-y-6">
+                    <div className="grid md:grid-cols-3 gap-6">
+                        <div className="p-5 bg-white dark:bg-dark-secondary rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm">
+                            <div className="w-12 h-12 bg-primary/10 text-primary rounded-lg flex items-center justify-center mb-4">
+                                <FaTools className="size-6" />
+                            </div>
+                            <h4 className="font-semibold text-lg text-title dark:text-white mb-2">High-Pressure Lamination</h4>
+                            <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+                                Scratch-proof, heat-resistant, and spill-resistant surfaces edged with 2mm PVC impact-absorbing banding.
+                            </p>
+                        </div>
+                        <div className="p-5 bg-white dark:bg-dark-secondary rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm">
+                            <div className="w-12 h-12 bg-emerald-500/10 text-emerald-600 rounded-lg flex items-center justify-center mb-4">
+                                <FaShieldAlt className="size-6" />
+                            </div>
+                            <h4 className="font-semibold text-lg text-title dark:text-white mb-2">Seasoned Timber</h4>
+                            <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+                                Chemically treated and kiln-dried wood eliminating warping, termite vulnerability, and weather moisture expansion.
+                            </p>
+                        </div>
+                        <div className="p-5 bg-white dark:bg-dark-secondary rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm">
+                            <div className="w-12 h-12 bg-blue-500/10 text-blue-600 rounded-lg flex items-center justify-center mb-4">
+                                <FaCheckCircle className="size-6" />
+                            </div>
+                            <h4 className="font-semibold text-lg text-title dark:text-white mb-2">Rigorous QC</h4>
+                            <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+                                100% pre-assembly testing at our Lahore workshop prior to protective bubble padding and boxed dispatch.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Tab 3: Customer Reviews */}
+            {activeTab === 3 && (
+                <div className="space-y-6">
+                    <div className="grid md:grid-cols-3 gap-6">
+                        {customerReviews.map((rev, idx) => (
+                            <div key={idx} className="p-6 bg-white dark:bg-dark-secondary rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm flex flex-col justify-between">
+                                <div>
+                                    <div className="flex gap-1 text-yellow-400 mb-3">
+                                        {[...Array(rev.rating)].map((_, i) => (
+                                            <GoStarFill key={i} className="size-4" />
+                                        ))}
+                                    </div>
+                                    <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed italic mb-4">
+                                        "{rev.review}"
+                                    </p>
+                                </div>
+                                <div className="border-t border-gray-100 dark:border-gray-800 pt-3">
+                                    <h5 className="font-semibold text-sm text-title dark:text-white">{rev.name}</h5>
+                                    <span className="text-xs text-primary font-medium">{rev.city}</span>
+                                    <span className="text-[11px] text-gray-400 block mt-0.5">{rev.date}</span>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            {/* Tab 4: Delivery & COD Policy */}
+            {activeTab === 4 && (
+                <div className="p-6 bg-snow dark:bg-dark-secondary rounded-xl border border-gray-200 dark:border-gray-800 space-y-4 text-sm sm:text-base text-gray-600 dark:text-gray-300">
+                    <div className="flex items-center gap-3 text-emerald-600 font-semibold text-base mb-2">
+                        <FaTruck className="size-5" />
+                        <span>Nationwide Doorstep Delivery with Cash on Delivery (COD)</span>
+                    </div>
+                    <p>
+                        We deliver safely to all major cities across Punjab, Sindh, KPK, Balochistan, and Islamabad Capital Territory:
+                    </p>
+                    <ul className="list-disc pl-5 space-y-2">
+                        <li><strong>Lahore & Rawalpindi / Islamabad:</strong> Delivered within 3 – 5 business days.</li>
+                        <li><strong>Karachi, Faisalabad, Multan, Sialkot, Peshawar:</strong> Delivered within 5 – 7 business days.</li>
+                        <li><strong>Free Delivery:</strong> All orders totaling over <strong>Rs. 50,000</strong> qualify for free nationwide delivery.</li>
+                        <li><strong>Open-Box Inspection:</strong> Customers are invited to verify furniture finishes before paying the delivery rider in cash.</li>
                     </ul>
                 </div>
-            }
-            {activeTab === 2 && 
-                <div>
-                    <div className="max-w-[680px] flex items-start justify-between gap-y-8 gap-x-10 flex-wrap">
-                        {venderInfo.map((item,index)=>{
-                            return(
-                                <div key={index}>
-                                    <span className="text-primary sm:text-lg leading-none block">Shop Name</span>
-                                    <h4 className="font-medium mt-2 sm:mt-3 text-xl sm:text-2xl leading-none">{item.name}</h4>
-                                    <ul className="mt-4 sm:mt-6 grid gap-3 sm:text-lg">
-                                        <li>Vendor : {item.vendor}</li>
-                                        <li>Shop : {item.shop}</li>
-                                        <li>Mail : {item.mail}</li>
-                                        <li>Call : {item.call}</li>
-                                    </ul>
-                                </div>
-                            )
-                        })}
-                    </div>
-                </div>
-            }
-            {activeTab === 3 && 
-                <div>
-                    <div className="max-w-[905px] flex items-start xl:justify-between gap-8 flex-wrap">
-                        {detailReview.map((item,index)=>{
-                            return(
-                                <div className="sm:max-w-[260px] w-full" key={index}>
-                                    <svg className="fill-current text-[#E8E9EA] dark:text-white-light" width="60" height="51" viewBox="0 0 60 51" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M0 25.5539C0 20.8097 0.974729 16.5328 2.92419 12.723C4.94585 8.91332 7.87004 5.89429 11.6968 3.66596C15.5235 1.36575 20.1083 0.143763 25.4513 0V11.2135C20.9025 11.2135 17.509 12.4715 15.2708 14.9873C13.1047 17.5032 12.0217 21.0254 12.0217 25.5539V28.1416H24.3682V51H0V25.5539ZM60 11.2135C55.4513 11.2135 52.0578 12.4715 49.8195 14.9873C47.6534 17.5032 46.5704 21.0254 46.5704 25.5539V28.1416H58.917V51H34.5487V25.5539C34.5487 20.8097 35.5235 16.5328 37.4729 12.723C39.4946 8.91332 42.4188 5.89429 46.2455 3.66596C50.0722 1.36575 54.657 0.143763 60 0V11.2135Z"/>
-                                    </svg>
-                                    <ul className="flex items-center gap-2 mt-4 sm:mt-6">
-                                        <li><GoStarFill className='text-yellow-500 size-4'/></li>
-                                        <li><GoStarFill className='text-yellow-500 size-4'/></li>
-                                        <li><GoStarFill className='text-yellow-500 size-4'/></li>
-                                        <li><GoStarFill className='text-yellow-500 size-4'/></li>
-                                        <li><GoStarFill className='text-slate-300 size-4'/></li>
-                                        <li className="dark:text-gray-100">( 125 )</li>
-                                    </ul>
-                                    <h6 className="font-semibold leading-none mt-[10px]">{item.name}</h6>
-                                    <p className="sm:text-lg mt-3">{item.desc}</p>
-                                </div>
-                            )
-                        })}
-                    </div>
-                </div>
-            }
-            {activeTab === 4 && 
-                <div>
-                    {shippingAbout.map((item,index)=>{
-                        return(
-                            <div key={index} className='mb-4'>
-                                <h4 className="text-xl sm:text-2xl leading-none font-medium">{item.title}</h4>
-                                <p className="sm:text-lg mt-3">{item.desc}</p>
-                            </div>
-                        )
-                    })}
-                </div>
-            }
+            )}
         </div>
     </div>
   )

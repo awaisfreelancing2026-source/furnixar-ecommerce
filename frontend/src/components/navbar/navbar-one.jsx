@@ -4,6 +4,7 @@ import logoLight from '../../assets/img/svg/logo-light.svg'
 import { Link } from 'react-router-dom'
 import NavMenu from './nav-menu'
 import add from '../../assets//img/thumb/add.png'
+import { FaPhoneAlt, FaTruck, FaWhatsapp } from 'react-icons/fa'
 
 export default function NavbarOne() {
     const [toggle , setToggle] = useState(false)
@@ -29,103 +30,139 @@ export default function NavbarOne() {
 
   return (
     <div className={`header-area default-header relative z-50 bg-white dark:bg-title ${scroll ? 'sticky-header' : ''}`}>
+        {/* Top utility notification bar (Interwood Style) */}
+        <div className="bg-[#181A1B] text-gray-300 text-xs py-2 px-4 border-b border-neutral-800">
+            <div className="max-w-[1720px] mx-auto flex items-center justify-between flex-wrap gap-2">
+                <div className="flex items-center gap-2">
+                    <span className="inline-flex items-center gap-1.5 text-primary font-medium">
+                        <FaTruck className="size-3.5" /> Cash on Delivery Nationwide
+                    </span>
+                    <span className="hidden md:inline text-neutral-500">|</span>
+                    <span className="hidden md:inline text-neutral-400">
+                        Free delivery across Pakistan on orders over Rs. 50,000
+                    </span>
+                </div>
+                <div className="flex items-center gap-4 text-xs">
+                    <a 
+                        href="tel:03311323017" 
+                        className="flex items-center gap-1.5 hover:text-primary transition-colors duration-200"
+                    >
+                        <FaPhoneAlt className="size-3 text-primary" />
+                        <span className="font-semibold text-white">0331-1323017</span>
+                    </a>
+                    <a 
+                        href="https://wa.me/923311323017?text=Hello%20Makkah%20Furniture%2C%20I%20would%20like%20to%20inquire%20about%20your%20products" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1 text-[#25D366] hover:underline font-medium"
+                    >
+                        <FaWhatsapp className="size-3.5" /> WhatsApp Support
+                    </a>
+                    <span className="hidden sm:inline text-neutral-500">|</span>
+                    <Link to="/contact" className="hidden sm:inline hover:text-primary transition-colors duration-200">
+                        Corporate Quotations
+                    </Link>
+                </div>
+            </div>
+        </div>
+
         <div className="container-fluid">
-            <div className="flex items-center justify-between gap-x-6 max-w-[1720px] mx-auto relative py-[10px] sm:py-4 lg:py-0">
-                <Link className="cursor-pointer block" to="/" aria-label="Furnixar">
-                    <img src={logo} alt="" className='dark:hidden w-[120px] sm:w-[200px]'/> 
-                    <img src={logoLight} alt="" className='dark:block hidden w-[120px] sm:w-[200px]'/> 
+            <div className="flex items-center justify-between gap-x-6 max-w-[1720px] mx-auto relative py-[12px] sm:py-4 lg:py-0">
+                <Link className="cursor-pointer flex items-center gap-2" to="/" aria-label="Makkah Furniture">
+                    <span className="text-2xl sm:text-3xl font-bold tracking-wider text-title dark:text-white uppercase">
+                        Makkah <span className="text-primary font-normal">Furniture</span>
+                    </span>
                 </Link>
 
                 <div className={`main-menu absolute z-50 w-full lg:w-auto top-full left-0 lg:static bg-white dark:bg-title lg:bg-transparent lg:dark:bg-transparent px-5 sm:px-[30px] py-[10px] sm:py-5 lg:px-0 lg:py-0 ${toggle ? 'active' : ''}`}>
-                    <ul className="text-lg leading-none text-title dark:text-white lg:flex lg:gap-[30px]">
-                        <li className={`relative ${['/','/index-v2','/index-v3','/index-v4','/index-v5','/index-v6'].includes(current) ? 'active' : ''}`}>
-                            <Link to="#">Home<span></span></Link>
-                            <ul className="sub-menu lg:absolute z-50 lg:top-full lg:left-0 lg:min-w-[220px] lg:invisible lg:transition-all lg:bg-white lg:dark:bg-title lg:py-[15px] lg:pr-[30px]">
-                                <li className={`${current === '/' ? 'active' : ''}`}><Link to="/" className="menu-item">Home Minimal</Link></li>
-                                <li className={`${current === '/index-v2' ? 'active' : ''}`}><Link to="/index-v2" className="menu-item">Home Stylish</Link></li>
-                                <li className={`${current === '/index-v3' ? 'active' : ''}`}><Link to="/index-v3" className="menu-item">Home Accessories</Link></li>
-                                <li className={`${current === '/index-v4' ? 'active' : ''}`}><Link to="/index-v4" className="menu-item">Home Collection</Link></li>
-                                <li className={`${current === '/index-v5' ? 'active' : ''}`}><Link to="/index-v5" className="menu-item">Home Luxury</Link></li>
-                                <li className={`${current === '/index-v6' ? 'active' : ''}`}><Link to="/index-v6" className="menu-item">Home Retro</Link></li>
+                    <ul className="text-base lg:text-[17px] font-medium leading-none text-title dark:text-white lg:flex lg:gap-[24px] xl:gap-[30px] items-center">
+                        <li className={`${current === '/' ? 'active text-primary' : ''}`}>
+                            <Link to="/">Home</Link>
+                        </li>
+
+                        {/* Office Menu */}
+                        <li className="relative group">
+                            <Link to="/shop?category=office" className="flex items-center gap-1">
+                                Office <span></span>
+                            </Link>
+                            <ul className="sub-menu lg:absolute z-50 lg:top-full lg:left-0 lg:min-w-[240px] lg:invisible lg:group-hover:visible lg:opacity-0 lg:group-hover:opacity-100 lg:transition-all lg:bg-white lg:dark:bg-title lg:py-[15px] lg:px-[20px] shadow-lg border border-gray-100 dark:border-gray-800">
+                                <li className="py-1.5"><Link to="/shop?category=office&sub=executive-tables" className="hover:text-primary block text-sm">Executive Tables</Link></li>
+                                <li className="py-1.5"><Link to="/shop?category=office&sub=executive-chairs" className="hover:text-primary block text-sm">Executive Chairs</Link></li>
+                                <li className="py-1.5"><Link to="/shop?category=office&sub=manager-tables" className="hover:text-primary block text-sm">Manager Tables</Link></li>
+                                <li className="py-1.5"><Link to="/shop?category=office&sub=manager-chairs" className="hover:text-primary block text-sm">Manager Chairs</Link></li>
+                                <li className="py-1.5"><Link to="/shop?category=office&sub=staff-tables" className="hover:text-primary block text-sm">Staff Tables</Link></li>
+                                <li className="py-1.5"><Link to="/shop?category=office&sub=staff-chairs" className="hover:text-primary block text-sm">Staff Chairs</Link></li>
+                                <li className="py-1.5"><Link to="/shop?category=office&sub=workstations" className="hover:text-primary block text-sm">Workstations</Link></li>
+                                <li className="py-1.5"><Link to="/shop?category=office&sub=conference-tables" className="hover:text-primary block text-sm">Conference Tables</Link></li>
+                                <li className="py-1.5"><Link to="/shop?category=office&sub=reception-counters" className="hover:text-primary block text-sm">Reception Counters</Link></li>
+                                <li className="py-1.5"><Link to="/shop?category=office&sub=storage-cabinets" className="hover:text-primary block text-sm">Storage Cabinets</Link></li>
                             </ul>
                         </li>
-                        <li className={` ${['/about','/pricing','/team','/our-clients','/faq','/terms-and-conditions','/portfolio-v1','/portfolio-v2','/portfolio-v3','/portfolio-details-v1','/portfolio-details-v2','/error','/my-profile','/login','/register','/forger-password','/coming-soon','/thank-you','/shipping-method','/payment-method','/invoice','/payment-confirmation','/payment-success','/payment-failure'].includes(current) ? 'active' : ''}`}>
-                            <Link to="">Pages<span></span></Link>
-                            <div className="mega-menu lg:absolute z-50 lg:top-full lg:left-1/2 lg:transform lg:-translate-x-1/2 lg:max-w-[1100px] lg:w-full lg:bg-white lg:dark:bg-title lg:px-[30px] lg:py-[15px] lg:flex lg:items-start lg:justify-between gap-[30px] lg:invisible lg:transition-all lg:duration-300">
-                                <div className="lg:grid lg:grid-cols-4 lg:items-start gap-x-5 2xl:gap-x-[25px] lg:flex-1">
-                                    <div className="megamenu-item">
-                                        <ul>
-                                            <li className={`${current === '/about' ? 'active' : ''}`}><Link to="/about">About Us</Link></li>
-                                            <li className={`${current === '/pricing' ? 'active' : ''}`}><Link to="/pricing">Price Plan</Link></li>
-                                            <li className={`${current === '/team' ? 'active' : ''}`}><Link to="/team">Team Member</Link></li>
-                                            <li className={`${current === '/our-clients' ? 'active' : ''}`}><Link to="/our-clients">Clients</Link></li>
-                                            <li className={`${current === '/faq' ? 'active' : ''}`}><Link to="/faq">FAQs</Link></li>
-                                            <li className={`${current === '/terms-and-conditions' ? 'active' : ''}`}><Link to="/terms-and-conditions">Terms & conditions</Link></li>
-                                        </ul>
-                                    </div>
-                                    <div className="megamenu-item">
-                                        <ul>
-                                            <li className={`${current === '/portfolio-v1' ? 'active' : ''}`}><Link to="/portfolio-v1">Portolfio 1</Link></li>
-                                            <li className={`${current === '/portfolio-v2' ? 'active' : ''}`}><Link to="/portfolio-v2">Portolfio 2</Link></li>
-                                            <li className={`${current === '/portfolio-v3' ? 'active' : ''}`}><Link to="/portfolio-v3">Portolfio 3</Link></li>
-                                            <li className={`${current === '/portfolio-details-v1' ? 'active' : ''}`}><Link to="/portfolio-details-v1">Portolfio details 1</Link></li>
-                                            <li className={`${current === '/portfolio-details-v2' ? 'active' : ''}`}><Link to="/portfolio-details-v2">Portolfio details 2</Link></li>
-                                            <li className={`${current === '/error' ? 'active' : ''}`}><Link to="/error">404 Error</Link></li>
-                                        </ul>
-                                    </div>
-                                    <div className="megamenu-item">
-                                        <ul>
-                                            <li className={`${current === '/my-profile' ? 'active' : ''}`}><Link to="/my-profile">My Profile</Link></li>
-                                            <li className={`${current === '/login' ? 'active' : ''}`}><Link to="/login">Login</Link></li>
-                                            <li className={`${current === '/register' ? 'active' : ''}`}><Link to="/register">Register</Link></li>
-                                            <li className={`${current === '/forger-password' ? 'active' : ''}`}><Link to="/forger-password">Forget Password</Link></li>
-                                            <li className={`${current === '/coming-soon' ? 'active' : ''}`}><Link to="/coming-soon">Coming Soon</Link></li>
-                                            <li className={`${current === '/thank-you' ? 'active' : ''}`}><Link to="/thank-you">Thank you</Link></li>
-                                        </ul>
-                                    </div>
-                                    <div className="megamenu-item">
-                                        <ul>
-                                            <li className={`${current === '/shipping-method' ? 'active' : ''}`}><Link to="/shipping-method">Shipping Method</Link></li>
-                                            <li className={`${current === '/payment-method' ? 'active' : ''}`}><Link to="/payment-method">Payment Method</Link></li>
-                                            <li className={`${current === '/invoice' ? 'active' : ''}`}><Link to="/invoice">Invoice</Link></li>
-                                            <li className={`${current === '/payment-confirmation' ? 'active' : ''}`}><Link to="/payment-confirmation">Payment Confirmation</Link></li>
-                                            <li className={`${current === '/payment-success' ? 'active' : ''}`}><Link to="/payment-success">Payment Completed</Link></li>
-                                            <li className={`${current === '/payment-failure' ? 'active' : ''}`}><Link to="/payment-failure">Payment Failure</Link></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div className="lg:py-[15px] lg:max-w-[280px] w-full hidden lg:block">
-                                    <Link to="/shop-v1">
-                                        <img src={add} alt="mega-menu-add"/>
-                                    </Link>
-                                </div>
-                            </div>
-                        </li>
-                        <li className={`relative ${['/shop-v1','/shop-v2','/shop-v3','/shop-v4','/product-details','/cart','/checkout'].includes(current) ? 'active' : ''}`}>
-                            <Link to="#">Shop<span></span></Link>
-                            <ul className="sub-menu lg:absolute z-50 lg:top-full lg:left-0 lg:min-w-[220px] lg:invisible lg:transition-all lg:bg-white lg:dark:bg-title lg:py-[15px] lg:pr-[30px]">
-                                <li className={`${current === '/shop-v1' ? 'active' : ''}`}><Link to="/shop-v1">Shop Layout 01</Link></li>
-                                <li className={`${current === '/shop-v2' ? 'active' : ''}`}><Link to="/shop-v2">Shop Layout 02</Link></li>
-                                <li className={`${current === '/shop-v3' ? 'active' : ''}`}><Link to="/shop-v3">Shop Layout 03</Link></li>
-                                <li className={`${current === '/shop-v4' ? 'active' : ''}`}><Link to="/shop-v4">Shop Layout 04</Link></li>
-                                <li className={`${current === '/product-details' ? 'active' : ''}`}><Link to="/product-details">Product Details</Link></li>
-                                <li className={`${current === '/cart' ? 'active' : ''}`}><Link to="/cart">My Cart</Link></li>
-                                <li className={`${current === '/checkout' ? 'active' : ''}`}><Link to="/checkout">Checkout</Link></li>
+
+                        {/* Cafe & Restaurant Menu */}
+                        <li className="relative group">
+                            <Link to="/shop?category=cafe-restaurant" className="flex items-center gap-1">
+                                Cafe & Restaurant <span></span>
+                            </Link>
+                            <ul className="sub-menu lg:absolute z-50 lg:top-full lg:left-0 lg:min-w-[220px] lg:invisible lg:group-hover:visible lg:opacity-0 lg:group-hover:opacity-100 lg:transition-all lg:bg-white lg:dark:bg-title lg:py-[15px] lg:px-[20px] shadow-lg border border-gray-100 dark:border-gray-800">
+                                <li className="py-1.5"><Link to="/shop?category=cafe-restaurant&sub=cafe-chairs" className="hover:text-primary block text-sm">Cafe Chairs</Link></li>
+                                <li className="py-1.5"><Link to="/shop?category=cafe-restaurant&sub=cafe-tables" className="hover:text-primary block text-sm">Cafe Tables</Link></li>
+                                <li className="py-1.5"><Link to="/shop?category=cafe-restaurant&sub=sofa-seatings" className="hover:text-primary block text-sm">Sofa Seatings</Link></li>
+                                <li className="py-1.5"><Link to="/shop?category=cafe-restaurant&sub=reception-counters" className="hover:text-primary block text-sm">Reception Counters</Link></li>
+                                <li className="py-1.5"><Link to="/shop?category=cafe-restaurant&sub=bar-stools" className="hover:text-primary block text-sm">Bar Stools</Link></li>
                             </ul>
                         </li>
-                        <li className={`relative ${['/blog-v1','/blog-v2','/blog-details-v1','/blog-details-v2','/blog-details-v3','/blog-tag'].includes(current) ? 'active' : ''}`}>
-                            <Link to="#">Blog<span></span></Link>
-                            <ul className="sub-menu lg:absolute z-50 lg:top-full lg:left-0 lg:min-w-[220px] lg:invisible lg:transition-all lg:bg-white lg:dark:bg-title lg:py-[15px] lg:pr-[30px]">
-                                <li className={`${current === '/blog-v1' ? 'active' : ''}`}><Link to="/blog-v1">Blog Layout 1</Link></li>
-                                <li className={`${current === '/blog-v2' ? 'active' : ''}`}><Link to="/blog-v2">Blog Layout 2</Link></li>
-                                <li className={`${current === '/blog-details-v1' ? 'active' : ''}`}><Link to="/blog-details-v1">Blog Details 1</Link></li>
-                                <li className={`${current === '/blog-details-v2' ? 'active' : ''}`}><Link to="/blog-details-v2">Blog Details 2</Link></li>
-                                <li className={`${current === '/blog-details-v3' ? 'active' : ''}`}><Link to="/blog-details-v3">Blog Details 3</Link></li>
-                                <li className={`${current === '/blog-tag' ? 'active' : ''}`}><Link to="/blog-tag">Blog Tag</Link></li>
+
+                        {/* Gaming & Study */}
+                        <li className="relative group">
+                            <Link to="/shop?category=gaming-zone" className="flex items-center gap-1">
+                                Gaming & Study <span></span>
+                            </Link>
+                            <ul className="sub-menu lg:absolute z-50 lg:top-full lg:left-0 lg:min-w-[220px] lg:invisible lg:group-hover:visible lg:opacity-0 lg:group-hover:opacity-100 lg:transition-all lg:bg-white lg:dark:bg-title lg:py-[15px] lg:px-[20px] shadow-lg border border-gray-100 dark:border-gray-800">
+                                <li className="py-1.5 font-semibold text-primary text-xs uppercase tracking-wider">Gaming Zone</li>
+                                <li className="py-1.5"><Link to="/shop?category=gaming-zone&sub=gaming-tables" className="hover:text-primary block text-sm">Gaming Tables</Link></li>
+                                <li className="py-1.5"><Link to="/shop?category=gaming-zone&sub=gaming-chairs" className="hover:text-primary block text-sm">Gaming Chairs</Link></li>
+                                <li className="py-1.5 mt-2 font-semibold text-primary text-xs uppercase tracking-wider border-t border-gray-100 dark:border-gray-700 pt-2">Study Corner</li>
+                                <li className="py-1.5"><Link to="/shop?category=study-corner&sub=study-tables" className="hover:text-primary block text-sm">Study Tables</Link></li>
+                                <li className="py-1.5"><Link to="/shop?category=study-corner&sub=study-chairs" className="hover:text-primary block text-sm">Study Chairs</Link></li>
                             </ul>
                         </li>
-                        <li className={`${current === '/contact' ? 'active' : ''}`}><Link to="/contact">Contact</Link></li>
-                        <li className="lg:hidden"><Link to="/login">Login</Link></li>
+
+                        {/* Dining */}
+                        <li className="relative group">
+                            <Link to="/shop?category=dining" className="flex items-center gap-1">
+                                Dining <span></span>
+                            </Link>
+                            <ul className="sub-menu lg:absolute z-50 lg:top-full lg:left-0 lg:min-w-[200px] lg:invisible lg:group-hover:visible lg:opacity-0 lg:group-hover:opacity-100 lg:transition-all lg:bg-white lg:dark:bg-title lg:py-[15px] lg:px-[20px] shadow-lg border border-gray-100 dark:border-gray-800">
+                                <li className="py-1.5"><Link to="/shop?category=dining&sub=dining-tables" className="hover:text-primary block text-sm">Dining Tables</Link></li>
+                                <li className="py-1.5"><Link to="/shop?category=dining&sub=dining-chairs" className="hover:text-primary block text-sm">Dining Chairs</Link></li>
+                            </ul>
+                        </li>
+
+                        {/* Outdoor Furniture & Decor */}
+                        <li className="relative group">
+                            <Link to="/shop?category=outdoor-furniture" className="flex items-center gap-1">
+                                Outdoor & Decor <span></span>
+                            </Link>
+                            <ul className="sub-menu lg:absolute z-50 lg:top-full lg:left-0 lg:min-w-[240px] lg:invisible lg:group-hover:visible lg:opacity-0 lg:group-hover:opacity-100 lg:transition-all lg:bg-white lg:dark:bg-title lg:py-[15px] lg:px-[20px] shadow-lg border border-gray-100 dark:border-gray-800">
+                                <li className="py-1.5 font-semibold text-primary text-xs uppercase tracking-wider">Outdoor Furniture</li>
+                                <li className="py-1.5"><Link to="/shop?category=outdoor-furniture" className="hover:text-primary block text-sm">Outdoor Tables & Chairs</Link></li>
+                                <li className="py-1.5 mt-2 font-semibold text-primary text-xs uppercase tracking-wider border-t border-gray-100 dark:border-gray-700 pt-2">Decor & Accents</li>
+                                <li className="py-1.5"><Link to="/shop?category=outdoor-furniture&sub=console-tables" className="hover:text-primary block text-sm">Console Tables</Link></li>
+                                <li className="py-1.5"><Link to="/shop?category=outdoor-furniture&sub=lamps" className="hover:text-primary block text-sm">Lamps</Link></li>
+                                <li className="py-1.5"><Link to="/shop?category=outdoor-furniture&sub=wall-shelves" className="hover:text-primary block text-sm">Wall Shelves</Link></li>
+                                <li className="py-1.5"><Link to="/shop?category=outdoor-furniture&sub=coat-hangers" className="hover:text-primary block text-sm">Coat Hangers</Link></li>
+                                <li className="py-1.5"><Link to="/shop?category=outdoor-furniture&sub=table-matts" className="hover:text-primary block text-sm">Table Mats & Accessories</Link></li>
+                            </ul>
+                        </li>
+
+                        <li className={`${current === '/shop' ? 'active text-primary' : ''}`}>
+                            <Link to="/shop">Shop All</Link>
+                        </li>
+
+                        <li className={`${current === '/contact' ? 'active text-primary' : ''}`}>
+                            <Link to="/contact">Contact</Link>
+                        </li>
                     </ul>
                 </div>
 

@@ -24,11 +24,17 @@ import hand from '../../assets/img/svg/hand.svg'
 
 import { RiShoppingBag2Line } from 'react-icons/ri';
 import { LuEye, LuHeart } from 'react-icons/lu';
+import { FaHeart } from 'react-icons/fa';
 import { GoStarFill } from 'react-icons/go';
+import { useWishlist } from '../../context/WishlistContext';
+import { useCart } from '../../context/CartContext';
 
 import AOS from 'aos';
 
 function Index() {
+    const { toggleWishlist, isInWishlist } = useWishlist();
+    const { addToCart } = useCart();
+
     useEffect(() => {
         AOS.init();
     }, []);
@@ -79,7 +85,7 @@ function Index() {
                         <TinySlider settings={settings}> 
                             {categoryOne.map((item,index)=>{
                                 return(
-                                    <Link className="relative block" to="/product-category" key={index}>
+                                    <Link className="relative block" to={`/shop?category=${item.slug || 'office'}`} key={index}>
                                         <img className="w-full object-cover" src={item.image} alt="product"/>
                                         <div className="absolute bottom-7 left-0 px-5 transform w-full flex justify-start">
                                             <div className="p-[15px] bg-white dark:bg-title w-auto">
@@ -123,7 +129,7 @@ function Index() {
                     })}
                 </div>
                 <div className="text-center mt-7 md:mt-12">
-                    <Link to="/shop-v1" className="btn btn-outline" data-text="All Products">
+                    <Link to="/shop" className="btn btn-outline" data-text="All Products">
                         <span>All Products</span>
                     </Link>
                 </div>
@@ -173,30 +179,32 @@ function Index() {
                             return(
                                 <div className="group" key={index}>
                                     <div className="relative overflow-hidden">
-                                        <Link to="/product-details">
+                                        <Link to={`/product-details/${item.id}`}>
                                             <img className="w-full transform group-hover:scale-110 duration-300 sm:max-h-[320px] object-cover" src={item.image} alt="product-card"/> 
                                         </Link>
 
                                         <div className="absolute z-10 top-[50%] right-3 transform -translate-y-[40%] opacity-0 duration-300 transition-all group-hover:-translate-y-1/2 group-hover:opacity-100 flex flex-col items-end gap-3">
-                                            <Link to="#" className="bg-white dark:bg-title dark:text-white bg-opacity-80 flex items-center justify-center gap-2 px-4 py-[10px] text-base leading-none text-title rounded-[40px] h-14 overflow-hidden new-product-icon">
-                                                <LuHeart className="dark:text-white h-[22px] w-[20px]"/>                                                                      
-                                                <span className="mt-1">Add to wishlist</span>
-                                            </Link>
-                                            <Link to="#" className="bg-white dark:bg-title dark:text-white bg-opacity-80 flex items-center justify-center gap-2 px-4 py-[10px] text-base leading-none text-title rounded-[40px] h-14 overflow-hidden new-product-icon">
-                                                <RiShoppingBag2Line className="dark:text-white h-[22px] w-[20px]"/>  
-                                                <span className="mt-1">Add to Cart</span>
-                                            </Link>
-                                            <button className="bg-white dark:bg-title dark:text-white bg-opacity-80 flex items-center justify-center gap-2 px-4 py-[10px] text-base leading-none text-title rounded-[40px] h-14 overflow-hidden new-product-icon quick-view">
-                                                <LuEye className="dark:text-white h-[22px] w-[20px]"/>                                      
-                                                <span className="mt-1">Quick View</span>
+                                            <button 
+                                                onClick={() => toggleWishlist(item)}
+                                                className={`bg-white dark:bg-title flex items-center justify-center gap-2 px-4 py-[10px] text-base leading-none rounded-[40px] h-14 overflow-hidden new-product-icon shadow-md hover:bg-primary hover:text-white transition-colors ${isInWishlist(item.id) ? 'text-red-500' : 'text-title dark:text-white'}`}
+                                            >
+                                                {isInWishlist(item.id) ? <FaHeart className="text-red-500 h-[20px] w-[20px]"/> : <LuHeart className="h-[22px] w-[20px]"/>}                                                                      
+                                                <span className="mt-1 text-xs">{isInWishlist(item.id) ? 'Saved' : 'Wishlist'}</span>
+                                            </button>
+                                            <button 
+                                                onClick={() => addToCart(item)}
+                                                className="bg-white dark:bg-title text-title dark:text-white flex items-center justify-center gap-2 px-4 py-[10px] text-base leading-none rounded-[40px] h-14 overflow-hidden new-product-icon shadow-md hover:bg-primary hover:text-white transition-colors"
+                                            >
+                                                <RiShoppingBag2Line className="h-[22px] w-[20px]"/>  
+                                                <span className="mt-1 text-xs">Add to Cart</span>
                                             </button>
                                         </div>
                                     </div>
                                     <div className="lg:pt-6 pt-5 flex gap-3 md:gap-4 flex-col">
-                                        <h4 className="font-medium leading-none dark:text-white text-lg">{item.price}  <span className="text-title/50 line-through pl-2 inline-block">$140.99</span></h4>
+                                        <h4 className="font-semibold leading-none text-primary text-lg">{item.price}  <span className="text-title/50 dark:text-gray-400 line-through pl-2 text-sm font-normal">Rs. {(item.numericPrice ? Math.round(item.numericPrice * 1.15) : 45000).toLocaleString()}</span></h4>
                                         <div>
                                             <h5 className="font-normal dark:text-white text-xl leading-[1.5]">
-                                                <Link to="/product-details" className="text-underline">{item.name}</Link>
+                                                <Link to={`/product-details/${item.id}`} className="text-underline">{item.name}</Link>
                                             </h5>
                                             <ul className="flex items-center gap-2 mt-1">
                                                 <li><GoStarFill className='text-yellow-500 size-4'/></li>
@@ -217,30 +225,32 @@ function Index() {
                             return(
                                 <div className="group flex flex-col" key={index}>
                                     <div className="relative overflow-hidden flex-1">
-                                        <Link to="/product-details">
+                                        <Link to={`/product-details/${item.id}`}>
                                             <img className="w-full transform group-hover:scale-110 duration-300 h-full object-cover" src={item.image} alt="product-card"/>
                                         </Link>
 
                                         <div className="absolute z-10 top-[50%] right-3 transform -translate-y-[40%] opacity-0 duration-300 transition-all group-hover:-translate-y-1/2 group-hover:opacity-100 flex flex-col items-end gap-3">
-                                            <Link to="#" className="bg-white dark:bg-title dark:text-white bg-opacity-80 flex items-center justify-center gap-2 px-4 py-[10px] text-base leading-none text-title rounded-[40px] h-14 overflow-hidden new-product-icon">
-                                                <LuHeart className="dark:text-white h-[22px] w-[20px]"/>                                                                      
-                                                <span className="mt-1">Add to wishlist</span>
-                                            </Link>
-                                            <Link to="#" className="bg-white dark:bg-title dark:text-white bg-opacity-80 flex items-center justify-center gap-2 px-4 py-[10px] text-base leading-none text-title rounded-[40px] h-14 overflow-hidden new-product-icon">
-                                                <RiShoppingBag2Line className="dark:text-white h-[22px] w-[20px]"/>  
-                                                <span className="mt-1">Add to Cart</span>
-                                            </Link>
-                                            <button className="bg-white dark:bg-title dark:text-white bg-opacity-80 flex items-center justify-center gap-2 px-4 py-[10px] text-base leading-none text-title rounded-[40px] h-14 overflow-hidden new-product-icon quick-view">
-                                                <LuEye className="dark:text-white h-[22px] w-[20px]"/>                                      
-                                                <span className="mt-1">Quick View</span>
+                                            <button 
+                                                onClick={() => toggleWishlist(item)}
+                                                className={`bg-white dark:bg-title flex items-center justify-center gap-2 px-4 py-[10px] text-base leading-none rounded-[40px] h-14 overflow-hidden new-product-icon shadow-md hover:bg-primary hover:text-white transition-colors ${isInWishlist(item.id) ? 'text-red-500' : 'text-title dark:text-white'}`}
+                                            >
+                                                {isInWishlist(item.id) ? <FaHeart className="text-red-500 h-[20px] w-[20px]"/> : <LuHeart className="h-[22px] w-[20px]"/>}                                                                      
+                                                <span className="mt-1 text-xs">{isInWishlist(item.id) ? 'Saved' : 'Wishlist'}</span>
+                                            </button>
+                                            <button 
+                                                onClick={() => addToCart(item)}
+                                                className="bg-white dark:bg-title text-title dark:text-white flex items-center justify-center gap-2 px-4 py-[10px] text-base leading-none rounded-[40px] h-14 overflow-hidden new-product-icon shadow-md hover:bg-primary hover:text-white transition-colors"
+                                            >
+                                                <RiShoppingBag2Line className="h-[22px] w-[20px]"/>  
+                                                <span className="mt-1 text-xs">Add to Cart</span>
                                             </button>
                                         </div>
                                     </div>
                                     <div className="lg:pt-6 pt-5 flex gap-3 md:gap-4 flex-col">
-                                        <h4 className="font-medium leading-none dark:text-white text-lg">{item.price}  <span className="text-title/50 line-through pl-2 inline-block">$140.99</span></h4>
+                                        <h4 className="font-semibold leading-none text-primary text-lg">{item.price}  <span className="text-title/50 dark:text-gray-400 line-through pl-2 text-sm font-normal">Rs. {(item.numericPrice ? Math.round(item.numericPrice * 1.15) : 45000).toLocaleString()}</span></h4>
                                         <div>
                                             <h5 className="font-normal dark:text-white text-xl leading-[1.5]">
-                                                <Link to="/product-details" className="text-underline">{item.name}</Link>
+                                                <Link to={`/product-details/${item.id}`} className="text-underline">{item.name}</Link>
                                             </h5>
                                             <ul className="flex items-center gap-2 mt-1">
                                                 <li><GoStarFill className='text-yellow-500 size-4'/></li>
